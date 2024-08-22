@@ -19,6 +19,7 @@ export default function RootLayout({
 
     <html lang="en">
       <body className={inter.className}>{children}</body>
+      <footer className="flex justify-center" >@Copy right</footer>
     </html>
     </ClerkProvider>
   );
