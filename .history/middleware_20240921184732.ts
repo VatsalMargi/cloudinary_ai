@@ -13,8 +13,6 @@ const isPublicApiRoute = createRouteMatcher([
 ])
 
 
-
-
 export default clerkMiddleware((auth, req) => {
     const {userId} = auth();
     const currentUrl = new URL(req.url)
@@ -31,7 +29,6 @@ export default clerkMiddleware((auth, req) => {
     }
     //not logged in
     if(!userId){
-        
         // If user is not logged in and trying to access a protected route
         if(!isPublicRoute(req) && !isPublicApiRoute(req) ){
             return NextResponse.redirect(new URL("/sign-in", req.url))

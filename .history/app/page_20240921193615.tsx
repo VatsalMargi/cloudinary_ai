@@ -56,7 +56,7 @@ export default function LearnMore() {
 
         <div className="flex justify-center space-x-4 mb-12">
         <button
-              className="bg-blue-600 rounded-md hover:text-gray-900 px-4 py-2"
+              className="bg-blue hover:text-gray-900 px-4 py-2"
               onClick={handlesignup}
             >
               Get-Started

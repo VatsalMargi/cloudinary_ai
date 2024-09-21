@@ -12,13 +12,15 @@ const isPublicApiRoute = createRouteMatcher([
     "/api/videos"
 ])
 
-
+const islm=createRouteMatcher([
+    "/learnmore"
+])
 
 
 export default clerkMiddleware((auth, req) => {
     const {userId} = auth();
     const currentUrl = new URL(req.url)
-     
+     const islearnmore=currentUrl.pathname === "/learnmore"
      const isAccessingDashboard = currentUrl.pathname === "/home"
      const isApiRequest = currentUrl.pathname.startsWith("/api")
     //  if (!isPublicRoute(req)) {

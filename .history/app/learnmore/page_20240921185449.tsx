@@ -1,16 +1,10 @@
 "use client";
 
-
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 
-
-
-
-
-
 export default function LearnMore() {
-    const router = useRouter();
     const handlesignup = () => {
       router.push("/sign-up");
     };
@@ -21,27 +15,16 @@ export default function LearnMore() {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       <header className="bg-white shadow-md">
         <nav className="container mx-auto flex justify-between items-center p-6">
-        <button
-              className="text-2xl font-bold text-gray-800"
-              onClick={()=>{
-                router.push("/")
-              }}
-            >
-              Helper.ai
-            </button>
+          <Link href="/">
+            <a className="text-3xl font-bold text-blue-700">Helper.ai</a>
+          </Link>
           <div>
-          <button
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-              onClick={handlesignin}
-            >
-              Sign-in
-            </button>
-            <button
-              className="text-gray-600 hover:text-gray-900 px-4 py-2"
-              onClick={handlesignup}
-            >
-              Sign-up
-            </button>
+            <Link href="/signin">
+              <a className="text-gray-600 hover:text-gray-900 px-4 py-2">Sign In</a>
+            </Link>
+            <Link href="/signup">
+              <a className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Sign Up</a>
+            </Link>
           </div>
         </nav>
       </header>
@@ -55,13 +38,16 @@ export default function LearnMore() {
         </p>
 
         <div className="flex justify-center space-x-4 mb-12">
-        <button
-              className="bg-blue-600 rounded-md hover:text-gray-900 px-4 py-2"
-              onClick={handlesignup}
-            >
-              Get-Started
-            </button>
-          
+          <Link href="/signup">
+            <a className="bg-blue-600 text-white px-8 py-4 rounded-full hover:bg-blue-700 transition duration-300">
+              Get Started
+            </a>
+          </Link>
+          <Link href="/features">
+            <a className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-full hover:bg-blue-50 transition duration-300">
+              Learn More
+            </a>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-16">
@@ -88,7 +74,11 @@ export default function LearnMore() {
         </div>
       </main>
 
-      
+      <footer className="bg-white py-8 shadow-inner mt-12">
+        <div className="container mx-auto text-center">
+          <p className="text-gray-500">© 2024 Helper.ai. Redefining media editing with AI.</p>
+        </div>
+      </footer>
     </div>
   );
 }
