@@ -1,0 +1,93 @@
+// 
+
+import { NextRequest, NextResponse } from 'next/server';
+import { v2 as cloudinary } from 'cloudinary';
+import { auth } from '@clerk/nextjs/server';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+// Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, // no NEXT_PUBLIC_ prefix for private vars
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+interface CloudinaryUploadResult {
+  public_id: string;
+  bytes: number;
+  duration?: number;
+  [key: string]: any;
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    // Clerk authentication
+    const { userId } = auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Ensure Cloudinary credentials are set
+    if (
+      !process.env.CLOUDINARY_CLOUD_NAME ||
+      !process.env.CLOUDINARY_API_KEY ||
+      !process.env.CLOUDINARY_API_SECRET
+    ) {
+      return NextResponse.json({ error: "Cloudinary credentials not found" }, { status: 500 });
+    }
+
+    const formData = await request.formData();
+    const file = formData.get("file") as File | null;
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const originalSize = formData.get("originalSize") as string;
+
+    if (!file) {
+      return NextResponse.json({ error: "File not found" }, { status: 400 });
+    }
+
+    // Convert file to buffer
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    
+    // Log buffer size to help debug potential issues
+    console.log("Buffer size:", buffer.length);
+
+    // Upload to Cloudinary
+    const result = await new Promise<CloudinaryUploadResult>((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "video",
+          folder: "video-uploads",
+          transformation: [{ quality: "auto", fetch_format: "mp4" }],
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result as CloudinaryUploadResult);
+        }
+      );
+      uploadStream.end(buffer); // Stream the buffer to Cloudinary
+    });
+
+    // Save the video metadata to the database
+    const video = await prisma.video.create({
+      data: {
+        title,
+        description,
+        publicId: result.public_id,
+        originalSize: originalSize, // Ensure this is a string or convert it appropriately
+        compressedSize: String(result.bytes),
+        duration: result.duration || 0,
+      },
+    });
+
+    return NextResponse.json(video);
+  } catch (error) {
+    console.error("Upload video failed", error);
+    return NextResponse.json({  error.message || "Upload video failed" }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
