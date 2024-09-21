@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import realtiveTime from "dayjs/plugin/relativeTime"
 import {filesize} from "filesize"
 import {Video} from '@/types'
-import Image from 'next/image';
 
 dayjs.extend(realtiveTime)
 

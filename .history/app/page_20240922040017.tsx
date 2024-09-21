@@ -1,7 +1,6 @@
 "use client";
 
 
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 
@@ -81,7 +80,7 @@ export default function LearnMore() {
         </div>
 
         <div className="mt-16">
-          <Image
+          <Imag
             src="/media-ai.png"
             alt="AI Media Illustration"
             className="mx-auto w-full max-w-lg"
