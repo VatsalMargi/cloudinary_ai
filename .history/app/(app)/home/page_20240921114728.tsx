@@ -31,19 +31,18 @@ function Home() {
     }, [fetchVideos])
 
     const handleDownload = useCallback((url: string, title: string) => {
-      try {
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", `${title}.mp4`);
-          link.setAttribute("target", "_blank");
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-      } catch (error) {
-          console.error("Download failed:", error);
-      }
-  }, []);
-  
+        () => {
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `${title}.mp4`);
+            // link.setAttribute("target", "_blank");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+        }
+
+    }, [])
 
     if(loading){
         return <div>Loading...</div>
@@ -63,7 +62,7 @@ function Home() {
                     <VideoCard
                         key={video.id}
                         video={video}
-                        onDownload={handleDownload}
+                        onDownload={handleDownload()}
                     />
                 ))
               }
