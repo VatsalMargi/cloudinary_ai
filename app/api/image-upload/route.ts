@@ -70,9 +70,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const config = {
-  runtime: 'nodejs', // disable Edge Runtime to support formData and streams
-};
+export const runtime = 'nodejs';
+
 
 interface CloudinaryUploadResult {
   public_id: string;
