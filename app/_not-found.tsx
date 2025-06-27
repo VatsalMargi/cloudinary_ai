@@ -6,3 +6,5 @@ export default function NotFound() {
     );
   }
   
+
+  export const runtime = 'nodejs';
